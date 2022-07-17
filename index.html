@@ -73,13 +73,11 @@
         str += curr.element + " ";
         curr = curr.next;
       }
-      console.log(str);
       return str;
     }
   }
 
   function reformatLinkedList(head) {
-    console.log(head);
     if (!head || !head.next) return head;
     let even, evenHead;
     let odd = head;
