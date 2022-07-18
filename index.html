@@ -1,134 +1,135 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LinkedList</title>
-  <style>
-  </style>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>LinkedList</title>
+    <style>
+    </style>
 </head>
 <body style="height: 100vh; margin: 0; position: relative;">
 <header style="padding: 20px;">
-  <h1 style="margin-top: 0">Преобразование односвязного списка</h1>
-  <p>Введите числа через пробел, чтобы сформировать односвязный список в порядке ввода.</p>
-  <p>Программа выбирает нечетные элементы и формирует из них новый односвязный список, так же и из четных элементов.
-    Затем
-    в четном остатке опять проводиться разделение на нечетные элементы, которые добавляются к предыдущему результату. И
-    так до тех пор, пока не останется один четный элемент, который присоединится к конечному списку.</p>
-  <p>1->7->9->3->5->6</p>
-  <p>1->9->5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7->3->6</p>
-  <p>1->9->5->7->6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3</p>
-  <p>1->9->5->7->6->3</p>
-  <hr>
+    <h1 style="margin-top: 0">Преобразование односвязного списка</h1>
+    <p>Введите числа через пробел, чтобы сформировать односвязный список в порядке ввода.</p>
+    <p>Программа выбирает нечетные элементы и формирует из них новый односвязный список, так же и из четных элементов.
+        Затем
+        в четном остатке опять проводиться разделение на нечетные элементы, которые добавляются к предыдущему
+        результату. И
+        так до тех пор, пока не останется один четный элемент, который присоединится к конечному списку.</p>
+    <p>1->7->9->3->5->6</p>
+    <p>1->9->5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7->3->6</p>
+    <p>1->9->5->7->6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3</p>
+    <p>1->9->5->7->6->3</p>
+    <hr>
 </header>
 <form id="numbersForm" style="text-align: center; display: flex; flex-direction: column; align-items: center;">
-  <input type="text" style="width: 300px; margin: 10px;">
-  <input type="submit" value="Ввести" style="width: 100px; margin: 10px;">
+    <input type="text" style="width: 300px; margin: 10px;">
+    <input type="submit" value="Ввести" style="width: 100px; margin: 10px;">
 </form>
 <footer style="text-align: center; margin: 0 auto; background-color: #ccc; width: 100%; position: absolute; bottom: 0;">
-  <p>Автор: Евгений Токарев</p>
-  <a href=""></a>
+    <p>Автор: Евгений Токарев</p>
+    <a href=""></a>
 </footer>
 <script>
-  class Node {
-    constructor(element) {
-      this.element = element;
-      this.next = null;
-    }
-  }
-
-  class LinkedList {
-    constructor() {
-      this.head = null;
-      this.size = 0;
-    }
-
-    add(element) {
-      const node = new Node(element);
-      let current;
-      if (this.head === null) this.head = node; else {
-        current = this.head;
-        while (current.next) {
-          current = current.next;
+    class Node {
+        constructor(element) {
+            this.element = element;
+            this.next = null;
         }
-        current.next = node;
-      }
-      this.size++;
     }
 
-    getHead() {
-      return this.head;
+    class LinkedList {
+        constructor() {
+            this.head = null;
+            this.size = 0;
+        }
+
+        add(element) {
+            const node = new Node(element);
+            let current;
+            if (this.head === null) this.head = node; else {
+                current = this.head;
+                while (current.next) {
+                    current = current.next;
+                }
+                current.next = node;
+            }
+            this.size++;
+        }
+
+        getHead() {
+            return this.head;
+        }
+
+        clearList() {
+            this.head = null;
+            this.size = 0;
+        }
+
+        printList() {
+            let curr = this.head;
+            let str = "";
+            while (curr) {
+                str += curr.element + " ";
+                curr = curr.next;
+            }
+            return str;
+        }
     }
 
-    clearList() {
-      this.head = null;
-      this.size = 0;
+    function reformatLinkedList(head) {
+        if (!head || !head.next) return head;
+        let even, evenHead;
+        let odd = head;
+        while (odd.next && odd.next.next) {
+            evenHead = odd.next;
+            while (odd.next && odd.next.next) {
+                even = odd.next;
+                odd.next = odd.next.next;
+                odd = odd.next;
+                even.next = odd.next || null;
+            }
+            odd.next = evenHead;
+            odd = odd.next || null;
+        }
+        return head;
     }
 
-    printList() {
-      let curr = this.head;
-      let str = "";
-      while (curr) {
-        str += curr.element + " ";
-        curr = curr.next;
-      }
-      return str;
-    }
-  }
+    const myList = new LinkedList();
+    const form = document.querySelector("#numbersForm");
+    const msg = document.createElement("span");
 
-  function reformatLinkedList(head) {
-    if (!head || !head.next) return head;
-    let even, evenHead;
-    let odd = head;
-    while (odd.next && odd.next.next) {
-      evenHead = odd.next;
-      while (odd.next && odd.next.next) {
-        even = odd.next;
-        odd.next = odd.next.next;
-        odd = odd.next;
-        even.next = odd.next || null;
-      }
-      odd.next = evenHead;
-      odd = odd.next || null;
-    }
-    return head;
-  }
+    function translateStringToArray(string) {
+        return string.split(" ");
+    };
 
-  const myList = new LinkedList();
-  const msg = document.createElement("span");
+    function displayMsg(msgText, alert = false) {
+        msg.innerText = msgText;
+        form.appendChild(msg);
+        if (alert) {
+            setTimeout(() => {
+                form.removeChild(msg);
+                form.children[0].focus();
+            }, 3000);
+        }
 
-  function translateStringToArray(string) {
-    return string.split(" ");
-  };
-
-  function displayMsg(msgText, alert = false) {
-    msg.innerText = msgText;
-    form.appendChild(msg);
-    if (alert) {
-      setTimeout(() => {
-        form.removeChild(msg);
-        e.target[0].focus();
-      }, 3000);
     }
 
-  }
-
-  const form = document.querySelector("#numbersForm");
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const regEx = /^(-?\d+)(-?\d|\s(?=(-?\d+)))+$/g;
-    if (!regEx.test(e.target[0].value.trim())) {
-      displayMsg("Incorrect data format", true);
-    } else {
-      translateStringToArray(e.target[0].value).forEach((el) => {
-        myList.add(el);
-      });
-      reformatLinkedList(myList.getHead());
-      displayMsg(myList.printList());
-      myList.clearList();
-    }
-  });
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const regEx = /^(-?\d+)(-?\d|\s(?=(-?\d+)))+$/g;
+        if (!regEx.test(e.target[0].value.trim())) {
+            displayMsg("Incorrect data format", true);
+        } else {
+            translateStringToArray(e.target[0].value).forEach((el) => {
+                myList.add(el);
+            });
+            reformatLinkedList(myList.getHead());
+            displayMsg(myList.printList());
+            myList.clearList();
+        }
+    });
 
 </script>
 </body>
